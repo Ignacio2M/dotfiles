@@ -5,9 +5,8 @@ Purple="\[\e[1;35m\]"       # Purple
 Cyan="\[\e[1;36m\]"         # Cyan
 Red="\[\e[1;31m\]"         # Red
 
-git branch &>/dev/null
-if [ $? = 0 ]; then
-    PS1="${Purple}\u${Red}[$(git branch 2>/dev/null | grep -E '* (.*)' | colrm 1 2)]${Cyan}\w ${Color_Off}\$ "
-    else
-    PS1="${Purple}\u${Red}@${Cyan}\w ${Color_Off}\$ "
-fi
+parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
+}
+
+PS1="${Purple}\u${Red}\$(parse_git_branch)${Cyan}\w ${Color_Off}\$ "
